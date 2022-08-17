@@ -54,12 +54,10 @@ const ReviewsSummary: FC<Props> = () => {
             flexDirection='column'
             justifyContent='center'
             sx={{
-              marginX: "2.5vw",
+              marginX: "12.5vw",
             }}
           >
-            <Typography sx={{ color: "#cea99f" }}>
-              Based on 23 reviews
-            </Typography>
+            <Typography sx={{ color: "#cea99f" }}>23 reviews</Typography>
           </Box>
         </Box>
         <Box display='flex' flexDirection='row'>
@@ -72,6 +70,7 @@ const ReviewsSummary: FC<Props> = () => {
             <Typography>Excellent</Typography>
             <Typography>Good</Typography>
             <Typography>Average</Typography>
+            <Typography>Below average</Typography>
             <Typography>Poor</Typography>
           </Box>
           <Box display='flex' flexDirection='column'></Box>
