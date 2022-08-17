@@ -4,7 +4,7 @@ export const fakeReviews = [
     name: "Maria Juana Urbina",
     rut: "14.125.253-k",
     stamp: "1 day ago",
-    text: "Coni is one of the best person you can call to trust your kids with!",
+    text: "Coni is one of the best sitter you can call to trust your kids with!",
     rating: 5,
   },
   {
@@ -20,7 +20,7 @@ export const fakeReviews = [
     name: "Maria Juana Urbina",
     rut: "14.125.253-k",
     stamp: "1 day ago",
-    text: "Coni is one of the best person you can call to trust your kids with!",
+    text: "Coni is one of the best sitter you can call to trust your kids with!",
     rating: 4,
   },
   {

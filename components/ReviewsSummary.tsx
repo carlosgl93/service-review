@@ -1,5 +1,5 @@
 // React & dependencies
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { FC } from "react";
 import Ratings from "./Ratings";
 
@@ -15,50 +15,38 @@ interface Props {}
 const ReviewsSummary: FC<Props> = () => {
   return (
     <>
-      <Box>
-        {/* Top centered part */}
-        <Box
-          display='flex'
-          flexDirection='column'
-          justifyContent='center'
-          sx={{
-            marginX: "25vw",
-          }}
-        >
-          <Box
-            display='flex'
-            flexDirection='column'
-            justifyContent='center'
-            sx={{
-              marginX: "17.5vw",
-            }}
-          >
-            {/* Reviews AVG */}
+      <Grid container>
+        <Grid item xs={12} md={6}>
+          <Box display='flex' justifyContent='center'>
             <Typography variant='h4' sx={{ color: "#8fc4c8" }}>
               4.8
             </Typography>
           </Box>
-          <Box
-            display='flex'
-            flexDirection='column'
-            justifyContent='center'
-            sx={{
-              marginX: "7.5vw",
-            }}
-          >
-            {/* Stars averaged */}
-            <Ratings ratingAverage={4.5} />
-          </Box>
-          <Box
-            display='flex'
-            flexDirection='column'
-            justifyContent='center'
-            sx={{
-              marginX: "12.5vw",
-            }}
-          >
-            <Typography sx={{ color: "#cea99f" }}>23 reviews</Typography>
-          </Box>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Ratings ratingAverage={4.5} />
+        </Grid>
+        <Grid item xs={12} md={12}></Grid>
+      </Grid>
+      <Box
+        display='flex'
+        flexDirection='column'
+        justifyContent='center'
+        sx={{
+          marginX: "25vw",
+        }}
+      >
+        {/* Top centered part */}
+        <Box>
+          {/* Reviews AVG */}
+          <Typography variant='h4' sx={{ color: "#8fc4c8" }}>
+            4.8
+          </Typography>
+
+          {/* Stars averaged */}
+          <Ratings ratingAverage={4.5} />
+
+          <Typography sx={{ color: "#cea99f" }}>23 reviews</Typography>
         </Box>
         <Box display='flex' flexDirection='row'>
           {/* Bottom with graph lines */}
