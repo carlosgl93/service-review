@@ -47,6 +47,7 @@ const HomeScreen: FC<Props> = () => {
           {fakeReviews.map((rev) => {
             return (
               <ReviewCard
+                key={rev.imgSrc}
                 imgSrc={rev.imgSrc}
                 name={rev.name}
                 rut={rev.rut}
