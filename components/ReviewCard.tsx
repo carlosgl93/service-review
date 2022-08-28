@@ -10,10 +10,10 @@ import { FC } from "react";
 
 // Typescript
 interface Props {
-  imgSrc: string;
+  imgSrc?: string;
   name: string;
   rut: string;
-  stamp: string;
+  stamp?: string;
   text: string;
   rating: number;
 }
@@ -26,7 +26,13 @@ const ReviewCard: FC<Props> = ({ imgSrc, name, rut, stamp, text, rating }) => {
     >
       <Grid container spacing={0} sx={{ mb: "-2vh" }}>
         <Grid item xs={2}>
-          <Avatar src={imgSrc} />
+          <Avatar
+            src={
+              imgSrc
+                ? imgSrc
+                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4BmH3ZlwXDCONbWa_sNSb4GpdFd2GxFJmr8zCIo4&s"
+            }
+          />
         </Grid>
         <Grid item xs={7}>
           <Box>
