@@ -1,5 +1,5 @@
 // React & dependencies
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 
 // Material Components
 import {
@@ -20,6 +20,13 @@ import RatingInput from "./RatingInput";
 
 // Typescript
 interface Props {
+  setConfirmingName: Dispatch<SetStateAction<boolean>>;
+  userId: string;
+  nameAndRutMatch: boolean;
+  setNameAndRutMatch: Dispatch<SetStateAction<boolean>>;
+  confirmingName: boolean;
+  verifyRut: (userId: string) => Promise<void>;
+  name: string;
   open: boolean;
   handleClose: () => void;
   reviewSaved: boolean;
@@ -31,6 +38,13 @@ interface Props {
   handleSave: () => Promise<void>;
 }
 const AddReviewDialog: FC<Props> = ({
+  setConfirmingName,
+  userId,
+  nameAndRutMatch,
+  setNameAndRutMatch,
+  confirmingName,
+  verifyRut,
+  name,
   open,
   handleClose,
   reviewSaved,
@@ -46,7 +60,7 @@ const AddReviewDialog: FC<Props> = ({
       {reviewSaved ? (
         <DialogTitle>Gracias por tu evaluación!</DialogTitle>
       ) : (
-        <DialogTitle>Ingresa tu nombre y rut.</DialogTitle>
+        <DialogTitle>Ingresa tu rut.</DialogTitle>
       )}
 
       <DialogContent>
@@ -63,63 +77,117 @@ const AddReviewDialog: FC<Props> = ({
         {reviewSaved ? (
           ""
         ) : (
+          // first step enter rut
+          // second step, ask user if the name from response is his/her name
+          // third step, let the user set a rating and comment
           <>
-            <RatingInput
-              reviewScore={reviewScore}
-              setReviewScore={setReviewScore}
-            />
-            <Box
-              display='flex'
-              flexDirection='row'
-              justifyContent='space-between'
-            >
-              <TextField
-                autoFocus
-                margin='dense'
-                id='name'
-                label='Nombre y apellido'
-                type='text'
-                onChange={handleChangeName}
-                variant='standard'
-                sx={{
-                  padding: "0 2vw",
-                }}
-              />
-              <TextField
-                autoFocus
-                margin='dense'
-                id='userId'
-                label='Rut'
-                type='text'
-                onChange={handleChangeUserId}
-                variant='standard'
-              />
-            </Box>
-
             <TextField
               autoFocus
               margin='dense'
-              id='review'
-              label='Ingresa tu comentario'
+              id='userId'
+              label='Rut: 15.532.234-k'
               type='text'
-              onChange={handleChangeReviewMessage}
+              onChange={handleChangeUserId}
               variant='standard'
-              fullWidth
-              minRows={5}
-              multiline
+              disabled={name.length > 3 ? true : false}
             />
+            {name.length > 3 && (
+              <>
+                {nameAndRutMatch ? (
+                  <DialogContentText>
+                    Ingresa tu calificación y un comentario, por favor.
+                  </DialogContentText>
+                ) : (
+                  <DialogContentText>¿Es este tu nombre?</DialogContentText>
+                )}
+
+                <TextField
+                  autoFocus
+                  margin='dense'
+                  id='name'
+                  label='Nombre y apellido'
+                  type='text'
+                  onChange={handleChangeName}
+                  variant='standard'
+                  sx={{
+                    pr: "2vw",
+                  }}
+                  value={name}
+                  fullWidth
+                  disabled={name.length > 3 ? true : false}
+                />
+              </>
+            )}
+
+            {nameAndRutMatch && confirmingName == false && (
+              <>
+                <DialogContentText>
+                  Por favor, Ingresa una nota y un comentario
+                </DialogContentText>
+                <RatingInput
+                  reviewScore={reviewScore}
+                  setReviewScore={setReviewScore}
+                />
+                <Box
+                  display='flex'
+                  flexDirection='row'
+                  justifyContent='space-between'
+                ></Box>
+
+                <TextField
+                  autoFocus
+                  margin='dense'
+                  id='review'
+                  label='Ingresa tu comentario'
+                  type='text'
+                  onChange={handleChangeReviewMessage}
+                  variant='standard'
+                  fullWidth
+                  minRows={5}
+                  multiline
+                />
+              </>
+            )}
           </>
         )}
       </DialogContent>
 
       <DialogActions>
-        {reviewSaved ? (
-          <Button onClick={handleClose}>Cerrar</Button>
-        ) : (
+        {confirmingName && !reviewSaved ? (
+          <>
+            <Button
+              onClick={() => {
+                setNameAndRutMatch(false);
+              }}
+            >
+              No es mi nombre.
+            </Button>
+            <Button
+              onClick={() => {
+                setConfirmingName(false);
+                setNameAndRutMatch(true);
+              }}
+            >
+              Si es mi nombre.
+            </Button>
+          </>
+        ) : nameAndRutMatch ? (
           <>
             <Button onClick={handleClose}>Cancelar</Button>
-            <Button onClick={handleSave}>Guardar</Button>
+            <Button onClick={handleSave}>Publicar</Button>
           </>
+        ) : !reviewSaved ? (
+          <>
+            <Button
+              onClick={() => {
+                verifyRut(userId);
+              }}
+            >
+              Validar rut
+            </Button>
+          </>
+        ) : (
+          ""
         )}
       </DialogActions>
     </Dialog>

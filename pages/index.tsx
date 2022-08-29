@@ -39,12 +39,15 @@ import Header from "../components/Header";
 import ReviewsSummary from "../components/ReviewsSummary";
 import ReviewCard from "../components/ReviewCard";
 import RatingInput from "../components/RatingInput";
+import api from "../pages/api/rut";
+
 // Queries & Mutations
 
 // Typescript
 import { fakeReviews } from "../utils/dummyData";
 import { Review } from "../interfaces";
 import AddReviewDialog from "../components/AddReviewDialog";
+import axios from "axios";
 
 // stars color: #f6c3a7
 // divider color: #cea99f
@@ -52,8 +55,8 @@ import AddReviewDialog from "../components/AddReviewDialog";
 interface Props {}
 
 const HomeScreen: FC<Props> = () => {
-  // const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(false);
+  const [reviewsAverage, setReviewsAverage] = useState(0);
   const [reviews, setReviews] = useState<DocumentData[]>([]);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -64,7 +67,9 @@ const HomeScreen: FC<Props> = () => {
   const [notificationMessage, setNotificationMessage] = useState("");
   const [notificationSeverity, setNotificationSeverity] =
     useState<AlertColor>("info");
-
+  const [confirmingName, setConfirmingName] = useState(false);
+  const [nameAndRutMatch, setNameAndRutMatch] = useState(false);
+  const [validRut, setValidRut] = useState(false);
   const [reviewSaved, setReviewSaved] = useState(false);
 
   // handlers
@@ -79,9 +84,34 @@ const HomeScreen: FC<Props> = () => {
     setReviewMessage(e.target.value);
   };
 
+  const resetState = () => {
+    setName("");
+    setReviewScore(0);
+    setReviewMessage("");
+    setNameAndRutMatch(false);
+    setConfirmingName(false);
+  };
+
+  const calculateReviewsAverage = () => {
+    if (reviews.length) {
+      let reviewsTotal = 0;
+      const reviewsCount = reviews.length;
+
+      reviews.map((rev) => {
+        reviewsTotal = reviewsTotal + rev.reviewScore;
+        console.log(rev.reviewScore);
+        console.log(reviewsTotal);
+      });
+
+      setReviewsAverage(() => reviewsTotal / reviewsCount);
+    } else {
+      getReviews();
+    }
+  };
+
   // let reviews: DocumentData[] = [];
 
-  const getReviews = async () => {
+  const getReviews = () => {
     setLoading(true);
     const collectionRef = collection(db, "reviews");
 
@@ -94,6 +124,7 @@ const HomeScreen: FC<Props> = () => {
         }))
       );
     });
+
     setLoading(false);
 
     return unsubscribe;
@@ -107,35 +138,56 @@ const HomeScreen: FC<Props> = () => {
     setOpen(true);
   };
 
+  const verifyRut = async (userId: string) => {
+    if (userId.length > 6) {
+      try {
+        const validateRut = await axios.get(
+          `https://api.libreapi.cl/rut/activities?rut=${userId}`
+        );
+        console.log(validateRut);
+
+        setName(validateRut.data.data.name);
+        setConfirmingName(true);
+        console.log(validateRut);
+        setValidRut(true);
+      } catch (error) {
+        console.log(error);
+
+        setReviewSaved(false);
+        setNotificationSeverity("error");
+        setNotificationMessage("Revisa tu rut.");
+        setShowNotification(true);
+      }
+    }
+  };
+
   const handleSave = async () => {
     if (userId.length > 3 && name.length > 3 && reviewMessage.length > 8) {
+      verifyRut(userId);
+
+      const newReview = {
+        name,
+        userId,
+        reviewMessage,
+        reviewScore,
+        creation_date: Date.now(),
+      };
+
       try {
-        await setDoc(
-          doc(db, "reviews", userId),
-          {
-            name,
-            userId,
-            reviewMessage,
-            reviewScore,
-            creation_date: Date.now(),
-            // creation_date: `${Date.prototype.getDate()} / ${Date.prototype.getMonth()} / ${
-            //   Date.prototype.getFullYear
-            // }`,
-          },
-          {
-            merge: true,
-          }
-        );
+        await setDoc(doc(db, "reviews", userId), newReview, {
+          merge: true,
+        });
 
         setNotificationSeverity("success");
         setNotificationMessage("Su evaluación fue guardada exitosamente.");
         setShowNotification(true);
         setReviewSaved(true);
+        resetState();
         getReviews();
         setTimeout(() => {
           setOpen(false);
           setReviewSaved(false);
-        }, 1500);
+        }, 3500);
       } catch (error) {
         console.log(error);
         setReviewSaved(false);
@@ -157,8 +209,11 @@ const HomeScreen: FC<Props> = () => {
 
   useEffect(() => {
     getReviews();
-    console.log(reviews);
   }, [reviewSaved]);
+
+  useEffect(() => {
+    calculateReviewsAverage();
+  }, [reviews]);
 
   if (loading) {
     return (
@@ -172,7 +227,7 @@ const HomeScreen: FC<Props> = () => {
         {/* Main container */}
         <Box display='flex' flexDirection='column' justifyContent='center'>
           <Header />
-          <ReviewsSummary />
+          <ReviewsSummary reviewsAverage={reviewsAverage} />
 
           {/* ADD REVIEW CTA */}
           <Divider>
@@ -187,6 +242,13 @@ const HomeScreen: FC<Props> = () => {
 
           {/* ADD REVIEW FORM */}
           <AddReviewDialog
+            setConfirmingName={setConfirmingName}
+            userId={userId}
+            nameAndRutMatch={nameAndRutMatch}
+            setNameAndRutMatch={setNameAndRutMatch}
+            confirmingName={confirmingName}
+            verifyRut={verifyRut}
+            name={name}
             open={open}
             handleClose={handleClose}
             reviewSaved={reviewSaved}

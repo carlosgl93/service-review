@@ -22,13 +22,12 @@ const Name: FC<Props> = ({ reviewScore, setReviewScore }) => {
   };
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1} justifyContent='center'>
       <Rating
         name='rating'
         value={reviewScore}
         precision={0.2}
-        readOnly
-        sx={{ color: "#f6c3a7" }}
+        sx={{ color: "#f6c3a7", ml: "15vw", mt: "2vh" }}
         onChange={(e, newValue) => handleChangeReviewScore(e, newValue)}
       />
     </Stack>

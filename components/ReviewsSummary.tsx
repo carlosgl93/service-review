@@ -1,15 +1,6 @@
 // React & dependencies
-import { FC, useEffect, useState } from "react";
-import {
-  collection,
-  query,
-  orderBy,
-  getDocs,
-  onSnapshot,
-  QuerySnapshot,
-  DocumentData,
-  SnapshotOptions,
-} from "firebase/firestore";
+import { FC, useEffect } from "react";
+
 // Material Components
 import { Box, Grid, Typography } from "@mui/material";
 
@@ -21,9 +12,11 @@ import { db } from "../firebaseConfig";
 
 // Typescript
 import { Review } from "../interfaces";
-interface Props {}
+interface Props {
+  reviewsAverage: number;
+}
 
-const ReviewsSummary: FC<Props> = () => {
+const ReviewsSummary: FC<Props> = ({ reviewsAverage }) => {
   return (
     <>
       <Grid container>
@@ -75,9 +68,9 @@ const ReviewsSummary: FC<Props> = () => {
             }}
           >
             <Typography variant='h4' sx={{ color: "#8fc4c8" }}>
-              4.8
+              {reviewsAverage}
             </Typography>
-            <Ratings ratingAverage={4.5} />
+            <Ratings ratingAverage={reviewsAverage} />
           </Box>
         </Grid>
       </Grid>
