@@ -99,8 +99,6 @@ const HomeScreen: FC<Props> = () => {
 
       reviews.map((rev) => {
         reviewsTotal = reviewsTotal + rev.reviewScore;
-        console.log(rev.reviewScore);
-        console.log(reviewsTotal);
       });
 
       setReviewsAverage(() => reviewsTotal / reviewsCount);

@@ -59,6 +59,10 @@ const AddReviewDialog: FC<Props> = ({
     <Dialog open={open} onClose={handleClose}>
       {reviewSaved ? (
         <DialogTitle>Gracias por tu evaluación!</DialogTitle>
+      ) : confirmingName ? (
+        <DialogTitle>Confirma tu nombre</DialogTitle>
+      ) : nameAndRutMatch ? (
+        <DialogTitle>Ingresa tu evaluación</DialogTitle>
       ) : (
         <DialogTitle>Ingresa tu rut.</DialogTitle>
       )}
