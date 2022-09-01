@@ -4,6 +4,7 @@ import { FC, useEffect } from "react";
 // Material Components
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
+import { CircularProgress } from "@mui/material";
 // My components
 
 // Queries & Mutations

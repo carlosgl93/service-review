@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 
 // My components
-import RatingInput from "./RatingInput";
+import RatingInput from "../RatingInput";
 
 // Queries & Mutations
 
@@ -57,15 +57,15 @@ const AddReviewDialog: FC<Props> = ({
 }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
-      {reviewSaved ? (
-        <DialogTitle>Gracias por tu evaluación!</DialogTitle>
-      ) : confirmingName ? (
-        <DialogTitle>Confirma tu nombre</DialogTitle>
-      ) : nameAndRutMatch ? (
-        <DialogTitle>Ingresa tu evaluación</DialogTitle>
-      ) : (
-        <DialogTitle>Ingresa tu rut.</DialogTitle>
-      )}
+      <DialogTitle style={{ color: "#f6c3a7" }}>
+        {reviewSaved
+          ? "Gracias por tu evaluación!"
+          : confirmingName
+          ? "Confirma tu nombre"
+          : nameAndRutMatch
+          ? "Ingresa tu evaluación"
+          : "Ingresa tu rut"}
+      </DialogTitle>
 
       <DialogContent>
         {reviewSaved ? (
@@ -92,15 +92,16 @@ const AddReviewDialog: FC<Props> = ({
               label='Rut: 15.532.234-k'
               type='text'
               onChange={handleChangeUserId}
-              variant='standard'
               disabled={name.length > 3 ? true : false}
+              sx={{
+                color: "#8fc4c8",
+              }}
+              variant='outlined'
             />
             {name.length > 3 && (
               <>
                 {nameAndRutMatch ? (
-                  <DialogContentText>
-                    Ingresa tu calificación y un comentario, por favor.
-                  </DialogContentText>
+                  ""
                 ) : (
                   <DialogContentText>¿Es este tu nombre?</DialogContentText>
                 )}
@@ -161,6 +162,7 @@ const AddReviewDialog: FC<Props> = ({
           <>
             <Button
               onClick={() => {
+                setConfirmingName(false);
                 setNameAndRutMatch(false);
               }}
             >
@@ -186,6 +188,7 @@ const AddReviewDialog: FC<Props> = ({
               onClick={() => {
                 verifyRut(userId);
               }}
+              disabled={userId.length < 6}
             >
               Validar rut
             </Button>

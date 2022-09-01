@@ -36,11 +36,9 @@ const ReviewCard: FC<Props> = ({ imgSrc, name, rut, stamp, text, rating }) => {
         </Grid>
         <Grid item xs={7}>
           <Box>
-            {/* Title */}
             <Typography variant='body1' sx={{ fontWeight: "bold" }}>
               {name}
             </Typography>
-            {/* rut */}
           </Box>
         </Grid>
         <Grid item xs={3}>
@@ -57,7 +55,7 @@ const ReviewCard: FC<Props> = ({ imgSrc, name, rut, stamp, text, rating }) => {
             defaultValue={rating}
             precision={0.2}
             readOnly
-            sx={{ color: "#f6c3a7" }}
+            sx={{ color: "#f6c3a7", marginTop: { xs: 3, sm: 3, md: 0 } }}
           />
         </Grid>
         <Grid item xs={2}>
@@ -75,7 +73,11 @@ const ReviewCard: FC<Props> = ({ imgSrc, name, rut, stamp, text, rating }) => {
       >
         <Typography variant='body1'>{text}</Typography>
       </Box>
-      <Divider />
+      <Divider
+        sx={{
+          bgcolor: "#f6c3a7",
+        }}
+      />
     </Box>
   );
 };

@@ -2,7 +2,7 @@
 import { FC, useEffect } from "react";
 
 // Material Components
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 
 // My components
 import Ratings from "./Ratings";
@@ -67,10 +67,16 @@ const ReviewsSummary: FC<Props> = ({ reviewsAverage }) => {
               my: "5vh",
             }}
           >
-            <Typography variant='h4' sx={{ color: "#8fc4c8" }}>
-              {reviewsAverage}
-            </Typography>
-            <Ratings ratingAverage={reviewsAverage} />
+            {reviewsAverage == 0 ? (
+              <CircularProgress />
+            ) : (
+              <>
+                <Typography variant='h4' sx={{ color: "#8fc4c8" }}>
+                  {reviewsAverage}
+                </Typography>
+                <Ratings ratingAverage={reviewsAverage} />
+              </>
+            )}
           </Box>
         </Grid>
       </Grid>

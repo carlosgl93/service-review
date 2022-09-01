@@ -4,31 +4,21 @@ import {
   collection,
   query,
   orderBy,
-  getDocs,
   setDoc,
   doc,
   DocumentData,
   onSnapshot,
 } from "firebase/firestore";
 
-import { useRouter } from "next/router";
-
 // Material Components
 import {
   Alert,
   AlertColor,
   Box,
-  Button,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Divider,
   Fab,
   Snackbar,
-  TextField,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -38,15 +28,12 @@ import { db } from "../firebaseConfig";
 import Header from "../components/Header";
 import ReviewsSummary from "../components/ReviewsSummary";
 import ReviewCard from "../components/ReviewCard";
-import RatingInput from "../components/RatingInput";
-import api from "../pages/api/rut";
 
 // Queries & Mutations
 
 // Typescript
-import { fakeReviews } from "../utils/dummyData";
-import { Review } from "../interfaces";
-import AddReviewDialog from "../components/AddReviewDialog";
+
+import AddReviewDialog from "../components/Dialog/AddReviewDialog";
 import axios from "axios";
 
 // stars color: #f6c3a7
@@ -129,6 +116,7 @@ const HomeScreen: FC<Props> = () => {
   };
 
   const handleClose = () => {
+    resetState();
     setOpen(false);
   };
 
@@ -185,7 +173,7 @@ const HomeScreen: FC<Props> = () => {
         setTimeout(() => {
           setOpen(false);
           setReviewSaved(false);
-        }, 3500);
+        }, 4500);
       } catch (error) {
         console.log(error);
         setReviewSaved(false);
@@ -228,7 +216,13 @@ const HomeScreen: FC<Props> = () => {
           <ReviewsSummary reviewsAverage={reviewsAverage} />
 
           {/* ADD REVIEW CTA */}
-          <Divider>
+          <Divider
+            sx={{
+              "&::before, &::after": {
+                borderColor: "#f6c3a7",
+              },
+            }}
+          >
             <Fab
               sx={{ backgroundColor: "#8fc4c8", color: "gray" }}
               aria-label='add'
