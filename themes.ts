@@ -84,12 +84,12 @@ export const coniTheme = createTheme({
     MuiTextField: {
       defaultProps: {
         inputProps: {
-          borderColor: "#8fc4c8",
+          // borderColor: "#8fc4c8",
         },
       },
       styleOverrides: {
         root: {
-          borderColor: "#8fc4c8",
+          // borderColor: "#8fc4c8",
         },
       },
     },

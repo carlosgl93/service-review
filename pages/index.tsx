@@ -58,6 +58,7 @@ const HomeScreen: FC<Props> = () => {
   const [nameAndRutMatch, setNameAndRutMatch] = useState(false);
   const [validRut, setValidRut] = useState(false);
   const [reviewSaved, setReviewSaved] = useState(false);
+  const [nameFound, setNameFound] = useState(false);
 
   // handlers
   const handleChangeName = (e: any) => {
@@ -77,6 +78,8 @@ const HomeScreen: FC<Props> = () => {
     setReviewMessage("");
     setNameAndRutMatch(false);
     setConfirmingName(false);
+    setNameFound(false);
+    setUserId("");
   };
 
   const calculateReviewsAverage = () => {
@@ -130,11 +133,13 @@ const HomeScreen: FC<Props> = () => {
         const validateRut = await axios.get(
           `https://api.libreapi.cl/rut/activities?rut=${userId}`
         );
-        console.log(validateRut);
 
         setName(validateRut.data.data.name);
         setConfirmingName(true);
         console.log(validateRut);
+        if (name.length > 3) {
+          setNameFound(true);
+        }
         setValidRut(true);
       } catch (error) {
         console.log(error);
@@ -187,7 +192,7 @@ const HomeScreen: FC<Props> = () => {
       setReviewSaved(false);
       setNotificationSeverity("error");
       setNotificationMessage(
-        "Por favor ingresa un nombre y rut válidos además de un comentario"
+        "Por favor ingresa un nombre y rut válidos además de un comentario de mas de 8 caracteres"
       );
       setShowNotification(true);
     }
@@ -250,6 +255,7 @@ const HomeScreen: FC<Props> = () => {
             handleChangeUserId={handleChangeUserId}
             handleChangeReviewMessage={handleChangeReviewMessage}
             handleSave={handleSave}
+            resetState={resetState}
           />
 
           <Box>

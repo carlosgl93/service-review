@@ -36,6 +36,7 @@ interface Props {
   handleChangeUserId: (e: any) => void;
   handleChangeReviewMessage: (e: any) => void;
   handleSave: () => Promise<void>;
+  resetState: () => void;
 }
 const AddReviewDialog: FC<Props> = ({
   setConfirmingName,
@@ -54,6 +55,7 @@ const AddReviewDialog: FC<Props> = ({
   handleChangeUserId,
   handleChangeReviewMessage,
   handleSave,
+  resetState,
 }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -100,9 +102,7 @@ const AddReviewDialog: FC<Props> = ({
             />
             {name.length > 3 && (
               <>
-                {nameAndRutMatch ? (
-                  ""
-                ) : (
+                {!nameAndRutMatch && (
                   <DialogContentText>¿Es este tu nombre?</DialogContentText>
                 )}
 
@@ -164,6 +164,7 @@ const AddReviewDialog: FC<Props> = ({
               onClick={() => {
                 setConfirmingName(false);
                 setNameAndRutMatch(false);
+                resetState();
               }}
             >
               No es mi nombre.
