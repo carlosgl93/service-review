@@ -68,7 +68,8 @@ const ReviewCard: FC<Props> = ({ imgSrc, name, rut, stamp, text, rating }) => {
         flexDirection='column'
         justifyContent='start'
         sx={{
-          mb: "2.5vh",
+          my: "2.5vh",
+          ml: "2.5vw",
         }}
       >
         <Typography variant='body1'>{text}</Typography>

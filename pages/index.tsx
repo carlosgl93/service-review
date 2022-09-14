@@ -43,7 +43,7 @@ interface Props {}
 
 const HomeScreen: FC<Props> = () => {
   const [loading, setLoading] = useState(false);
-  const [reviewsAverage, setReviewsAverage] = useState(0);
+  const [reviewsAverage, setReviewsAverage] = useState<number | null>(null);
   const [reviews, setReviews] = useState<DocumentData[]>([]);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");

@@ -13,7 +13,7 @@ import { db } from "../firebaseConfig";
 // Typescript
 import { Review } from "../interfaces";
 interface Props {
-  reviewsAverage: number;
+  reviewsAverage: number | null;
 }
 
 const ReviewsSummary: FC<Props> = ({ reviewsAverage }) => {
@@ -67,7 +67,7 @@ const ReviewsSummary: FC<Props> = ({ reviewsAverage }) => {
               my: "5vh",
             }}
           >
-            {reviewsAverage == 0 ? (
+            {reviewsAverage == null ? (
               <CircularProgress />
             ) : (
               <>
