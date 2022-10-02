@@ -1,5 +1,5 @@
 // React & dependencies
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 
 // Material Components
 import {
@@ -11,6 +11,7 @@ import {
   TextField,
   DialogActions,
   Button,
+  Typography,
 } from "@mui/material";
 
 // My components
@@ -37,6 +38,7 @@ interface Props {
   handleChangeReviewMessage: (e: any) => void;
   handleSave: () => Promise<void>;
   resetState: () => void;
+  nameFound: boolean;
 }
 const AddReviewDialog: FC<Props> = ({
   setConfirmingName,
@@ -56,6 +58,7 @@ const AddReviewDialog: FC<Props> = ({
   handleChangeReviewMessage,
   handleSave,
   resetState,
+  nameFound,
 }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -94,34 +97,51 @@ const AddReviewDialog: FC<Props> = ({
               label='Rut: 15.532.234-k'
               type='text'
               onChange={handleChangeUserId}
-              disabled={name.length > 3 ? true : false}
+              // disabled={name.length > 3 ? true : false}
               sx={{
                 color: "#8fc4c8",
               }}
               variant='outlined'
+              value={userId}
             />
-            {name.length > 3 && (
+            {name.length > 3 && nameFound ? (
               <>
                 {!nameAndRutMatch && (
                   <DialogContentText>¿Es este tu nombre?</DialogContentText>
                 )}
-
-                <TextField
-                  autoFocus
-                  margin='dense'
-                  id='name'
-                  label='Nombre y apellido'
-                  type='text'
-                  onChange={handleChangeName}
-                  variant='standard'
-                  sx={{
-                    pr: "2vw",
-                  }}
-                  value={name}
-                  fullWidth
-                  disabled={name.length > 3 ? true : false}
-                />
+                <DialogContentText>{name}</DialogContentText>
               </>
+            ) : (
+              !nameFound &&
+              confirmingName && (
+                <>
+                  <DialogContentText>
+                    Al parecer{" "}
+                    <Typography
+                      variant='body1'
+                      color='secondary'
+                      sx={{ display: "inline" }}
+                    >
+                      no pudimos encontrarte por tu rut
+                    </Typography>
+                    . Por favor, ingresa tu nombre completo.
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin='dense'
+                    id='name'
+                    label='Nombres y apellidos'
+                    type='text'
+                    onChange={handleChangeName}
+                    variant='standard'
+                    sx={{
+                      pr: "2vw",
+                    }}
+                    value={name}
+                    fullWidth
+                  />
+                </>
+              )
             )}
 
             {nameAndRutMatch && confirmingName == false && (
@@ -158,7 +178,7 @@ const AddReviewDialog: FC<Props> = ({
       </DialogContent>
 
       <DialogActions>
-        {confirmingName && !reviewSaved ? (
+        {confirmingName && !reviewSaved && nameFound ? (
           <>
             <Button
               onClick={() => {
@@ -167,7 +187,7 @@ const AddReviewDialog: FC<Props> = ({
                 resetState();
               }}
             >
-              No es mi nombre.
+              No, es mi nombre.
             </Button>
             <Button
               onClick={() => {
@@ -175,7 +195,7 @@ const AddReviewDialog: FC<Props> = ({
                 setNameAndRutMatch(true);
               }}
             >
-              Si es mi nombre.
+              Si, es mi nombre.
             </Button>
           </>
         ) : nameAndRutMatch ? (
@@ -183,7 +203,7 @@ const AddReviewDialog: FC<Props> = ({
             <Button onClick={handleClose}>Cancelar</Button>
             <Button onClick={handleSave}>Publicar</Button>
           </>
-        ) : !reviewSaved ? (
+        ) : !reviewSaved && !nameFound && !confirmingName ? (
           <>
             <Button
               onClick={() => {
@@ -195,7 +215,17 @@ const AddReviewDialog: FC<Props> = ({
             </Button>
           </>
         ) : (
-          ""
+          <>
+            <Button
+              onClick={() => {
+                setNameAndRutMatch(true);
+                setConfirmingName(false);
+              }}
+              disabled={userId.length < 6}
+            >
+              Siguiente
+            </Button>
+          </>
         )}
       </DialogActions>
     </Dialog>

@@ -133,17 +133,19 @@ const HomeScreen: FC<Props> = () => {
         const validateRut = await axios.get(
           `https://api.libreapi.cl/rut/activities?rut=${userId}`
         );
-
-        setName(validateRut.data.data.name);
-        setConfirmingName(true);
-        console.log(validateRut);
-        if (name.length > 3) {
+        if (validateRut.data.data.name.length > 0) {
+          setName(validateRut.data.data.name);
+          setConfirmingName(true);
+          console.log(validateRut);
           setNameFound(true);
+          setValidRut(true);
+        } else {
+          setNameFound(false);
+          setConfirmingName(true);
         }
-        setValidRut(true);
       } catch (error) {
         console.log(error);
-
+        setNameFound(false);
         setReviewSaved(false);
         setNotificationSeverity("error");
         setNotificationMessage("Revisa tu rut.");
@@ -256,6 +258,7 @@ const HomeScreen: FC<Props> = () => {
             handleChangeReviewMessage={handleChangeReviewMessage}
             handleSave={handleSave}
             resetState={resetState}
+            nameFound={nameFound}
           />
 
           <Box>
