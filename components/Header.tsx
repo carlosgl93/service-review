@@ -1,16 +1,45 @@
 // React & dependencies
-import { Box, Avatar, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, useContext, useState } from "react";
+import ReactCountryFlag from "react-country-flag";
 
 // Material Components
+import {
+  Box,
+  Avatar,
+  Typography,
+  SelectChangeEvent,
+  Button,
+} from "@mui/material";
 
 // My components
+import { Context } from "../context";
+import LanguageSelector from "./LanguageSelector";
+import { translate } from "../utils/translation";
+import LanguageButton from "./LanguageButton";
 
 // Queries & Mutations
 
 // Typescript
 interface Props {}
 const Header: FC<Props> = () => {
+  const { selectLanguage, selectedLanguage } = useContext(Context);
+  console.log({ selectedLanguage });
+  const [open, setOpen] = useState(false);
+  const [selectingLanguage, setSelectingLanguage] = useState(false);
+
+  const handleChange = (e: SelectChangeEvent<string>) => {
+    selectLanguage(e.target.value);
+    setSelectingLanguage(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectingLanguage(false);
+  };
   return (
     <Box
       display='flex'
@@ -33,6 +62,24 @@ const Header: FC<Props> = () => {
       <Box>
         <Typography>Constanza Sepulveda</Typography>
       </Box>
+      {/* SELECT LANGUAGE COMPONENTS */}
+      {selectingLanguage == false && (
+        <LanguageButton
+          setOpen={setOpen}
+          selectingLanguage={selectingLanguage}
+          setSelectingLanguage={setSelectingLanguage}
+        />
+      )}
+
+      {selectingLanguage && (
+        <LanguageSelector
+          open={open}
+          handleChange={handleChange}
+          handleOpen={handleOpen}
+          handleClose={handleClose}
+        />
+      )}
+      {/* SELECT LANGUAGE COMPONENTS */}
     </Box>
   );
 };

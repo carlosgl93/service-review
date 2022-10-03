@@ -1,24 +1,44 @@
 // React & dependencies
-import { FC, useEffect } from "react";
-
+import { FC, useContext, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 // Material Components
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 
 // My components
 import Ratings from "./Ratings";
-import { db } from "../firebaseConfig";
+import { Context } from "../context";
+import { translate } from "../utils/translation";
 
 // Queries & Mutations
 
 // Typescript
 import { Review } from "../interfaces";
+
 interface Props {
   reviewsAverage: number | null;
 }
 
 const ReviewsSummary: FC<Props> = ({ reviewsAverage }) => {
+  const { t } = useTranslation();
+  const { selectedLanguage } = useContext(Context);
+
   return (
     <>
+      <Box
+        display='flex'
+        flexDirection='column'
+        justifyContent='center'
+        alignItems='center'
+        sx={{
+          m: "1vh 1vw",
+          p: "1vh 1vw",
+        }}
+      >
+        <Typography variant='subtitle2'>{t("title")}</Typography>
+        <Typography variant='subtitle2'>
+          {translate(2, selectedLanguage)}
+        </Typography>
+      </Box>
       <Grid container>
         <Grid
           item
